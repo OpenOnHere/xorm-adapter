@@ -19,6 +19,7 @@ import (
 	"strings"
 	"testing"
 
+	_ "gitee.com/chunanyong/dm" // db = dm
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/util"
 	_ "github.com/go-sql-driver/mysql"
@@ -358,7 +359,7 @@ func TestAdapters(t *testing.T) {
 	// You can also use the following way to use an existing DB "abc":
 	// testSaveLoad(t, "mysql", "root:@tcp(127.0.0.1:3306)/abc", true)
 
-	a, _ := NewAdapter("mysql", "root:@tcp(127.0.0.1:3306)/")
+	a, _ := NewAdapter("mysql", "root:root@tcp(127.0.0.1:3306)/")
 	testSaveLoad(t, a)
 	testAutoSave(t, a)
 	testFilteredPolicy(t, a)
@@ -376,7 +377,17 @@ func TestAdapters(t *testing.T) {
 	testUpdatePolicies(t, a)
 	testUpdateFilteredPolicies(t, a)
 
-	a, _ = NewAdapterWithTableName("mysql", "root:@tcp(127.0.0.1:3306)/", "test", "abc")
+	a, _ = NewAdapterWithTableName("mysql", "root:root@tcp(127.0.0.1:3306)/", "test", "abc")
+	testSaveLoad(t, a)
+	testAutoSave(t, a)
+	testFilteredPolicy(t, a)
+	testAddPolicies(t, a)
+	testRemovePolicies(t, a)
+	testUpdatePolicies(t, a)
+	testUpdateFilteredPolicies(t, a)
+
+	a, _ = NewAdapter("dm", "dm://SYSDBA:SYSDBA001@localhost:5236/")
+	a.engine.ShowSQL(true)
 	testSaveLoad(t, a)
 	testAutoSave(t, a)
 	testFilteredPolicy(t, a)

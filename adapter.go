@@ -198,6 +198,8 @@ func (a *Adapter) createDatabase() error {
 				return nil
 			}
 		}
+	} else if a.driverName == "dm" {
+		_, err = engine.Exec("CREATE SCHEMA casbin")
 	} else if a.driverName != "sqlite3" {
 		_, err = engine.Exec("CREATE DATABASE IF NOT EXISTS casbin")
 	}
